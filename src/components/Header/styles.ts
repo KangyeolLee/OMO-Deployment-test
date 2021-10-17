@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 interface HeaderProps {
   align?: string;
+  borderBottom?: boolean;
 }
 
 export const Header = styled.header<HeaderProps>`
@@ -9,6 +10,8 @@ export const Header = styled.header<HeaderProps>`
   height: 67px;
   display: flex;
   justify-content: ${({ align }) => align ?? 'center'};
+  border-bottom: ${({ borderBottom }) =>
+    borderBottom ? `1px solid rgba(196, 196, 196, 0.2)` : 'none'};
   align-items: center;
 `;
 
@@ -30,24 +33,26 @@ export const PrevButton = styled.button`
 export const Title = styled.h1`
   color: ${({ theme }) => theme.colors.black800};
   ${({ theme }) => theme.fonts.subTitle1};
+  font-weight: 500;
 `;
 
 export const Input = styled.input`
   width: 100%;
-  font-size: 14px;
-  font-weight: 400;
-  font-family: 'Noto Sans KR', sans-serif;
+  ${({ theme }) => theme.fonts.contents1};
+  color: ${({ theme }) => theme.colors.black500};
   border: none;
   outline: none;
   padding: 0 40px;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.black500};
+  }
 `;
 
 export const SearchButton = styled(PrevButton)`
   left: unset;
-  right: 21px;
+  right: 20px;
   margin: 0;
-  font-weight: bold;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  line-height: 140%;
+  padding: 0;
+  ${({ theme }) => theme.fonts.contents2};
 `;

@@ -4,22 +4,32 @@ export const NoData = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  justify-content: center;
 
   .guide-message-wrapper {
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    line-height: 140%;
-    font-weight: 400;
+    margin-top: 66px;
+    ${({ theme }) => theme.fonts.contents2};
+    color: ${({ theme }) => theme.colors.black500};
+    line-height: 20px;
     text-align: center;
-    margin: 1rem 0;
+
+    &.mt-30 {
+      margin-top: 30px;
+      margin-bottom: 12px;
+    }
   }
 
   .hashtag-wrapper {
     display: flex;
     flex-wrap: wrap;
     margin: auto;
-    margin-top: 1rem;
-    margin-bottom: 4rem;
+    margin-top: 30px;
+    margin-bottom: 55px;
   }
+`;
+
+export const Divider = styled.div`
+  margin: 0 -20px;
+  width: calc(100% + 40px);
+  height: 8px;
+  background-color: ${({ theme }) => theme.colors.black100};
 `;

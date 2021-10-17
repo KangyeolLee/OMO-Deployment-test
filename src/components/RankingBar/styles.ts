@@ -16,7 +16,7 @@ export const RankingBarWrapper = styled.div`
 
   .rank {
     width: 20%;
-    ${({ theme }) => theme.fonts.bold};
+    ${({ theme }) => theme.fonts.contentsBold};
     font-size: 18px;
   }
 
@@ -26,7 +26,7 @@ export const RankingBarWrapper = styled.div`
   }
 
   .amount {
-    width: 10%;
+    width: 11%;
     margin-top: 4px;
   }
 `;
