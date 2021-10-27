@@ -2,46 +2,50 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import Mascot from '@assets/mascot.svg';
+import { NicknameInputErrorType } from '@@types/shared';
 import LoginLayout from '@components/Layout/LoginLayout';
-
-type ErrorType = 'default' | 'duplicate' | 'usable';
-
-const errorStatusMsg = {
-  default: '2자 이상 입력해주세요',
-  duplicate: '중복된 닉네임입니다',
-  usable: '사용가능한 닉네임입니다',
-};
-
-const errorStatusColor = {
-  default: '#000',
-  duplicate: '#FF473B',
-  usable: '#2334CF',
-};
+import NicknameInput from '@components/NicknameInput';
+import Button from '@components/Shared/Button';
+import { useSetSignupFormState } from '@recoil/signupFormState';
 
 const Nickname = () => {
   const router = useRouter();
-  const [errorStatus] = useState<ErrorType>('usable');
+  const [nickname, setNickname] = useState<string>('');
+  const [errorStatus, setErrorStatus] = useState<NicknameInputErrorType>('default');
+  const setSignupFormState = useSetSignupFormState();
 
+  /**
+   * errorStatus가 usable 일 경우,
+   * recoil에 닉네임 상태를 반영하고 profile 설정 페이지로 이동합니다.
+   */
   const onClickNextButton = () => {
     if (errorStatus !== 'usable') return;
+    setSignupFormState((state) => ({ ...state, nickname }));
     router.push('/login/profile');
   };
 
   return (
     <LoginLayout>
       <Content>
-        <Mascot />
         <div className="welcome-letter">어서오세요!</div>
-        <div className="welcome-sub-letter">닉네임을 정해주세요 (최대 10자)</div>
-        <div className="nickname-input">
-          <input type="text" placeholder="닉네임 입력" maxLength={10} />
-          <ErrorNotifySpan errorStatus={errorStatus}>{errorStatusMsg[errorStatus]}</ErrorNotifySpan>
-        </div>
+        <div className="welcome-sub-letter">닉네임을 정해주세요 (최대 8자)</div>
+
+        <NicknameInput
+          errorStatus={errorStatus}
+          setNickname={setNickname}
+          setErrorStatus={setErrorStatus}
+        />
       </Content>
-      <NextPageButton errorStatus={errorStatus} onClick={onClickNextButton}>
-        다음
-      </NextPageButton>
+
+      <Button
+        text="다음"
+        width="calc(100% - 40px)"
+        position="absolute"
+        left="20px"
+        bottom="3rem"
+        disabled={errorStatus !== 'usable'}
+        clickListener={onClickNextButton}
+      />
     </LoginLayout>
   );
 };
@@ -52,7 +56,7 @@ const Content = styled.div`
   box-sizing: border-box;
   width: 100%;
   height: 310px;
-  margin-top: 6rem;
+  margin-top: 7rem;
   padding: 0 20px;
 
   svg {
@@ -72,51 +76,4 @@ const Content = styled.div`
     font-size: 14px;
     margin-bottom: 40px;
   }
-
-  .nickname-input {
-    position: relative;
-    width: 100%;
-  }
-
-  input {
-    all: unset;
-    width: 100%;
-    height: 29px;
-    border-bottom: 1px solid #000;
-
-    color: #000;
-
-    ::placeholder {
-      color: #b8b8b8;
-    }
-  }
-`;
-
-const ErrorNotifySpan = styled.span<{ errorStatus: ErrorType }>`
-  position: absolute;
-  bottom: 4px;
-  right: 0;
-  line-height: 18px;
-  font-size: 12px;
-
-  color: ${({ errorStatus }) => errorStatusColor[errorStatus]};
-`;
-
-const NextPageButton = styled.button<{ errorStatus: ErrorType }>`
-  border: none;
-  position: absolute;
-  left: 20px;
-  bottom: 3rem;
-  width: calc(100% - 40px);
-  height: 48px;
-
-  margin: 0 auto;
-  border-radius: 8px;
-
-  background-color: ${({ errorStatus }) => (errorStatus === 'usable' ? '#2334CF' : '#d7d8dd')};
-  color: #fff;
-
-  font-size: 18px;
-  font-weight: 700;
-  cursor: ${({ errorStatus }) => (errorStatus === 'usable' ? 'pointer' : 'default')};
 `;

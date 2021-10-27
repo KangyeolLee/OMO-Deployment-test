@@ -1,22 +1,23 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import Prev from '@assets/prev.svg';
+import Setting from '@assets/setting.svg';
+import { useUserValue } from '@recoil/userState';
 
 import * as S from './styles';
 
-interface HeaderProps {
-  title: string;
-}
-
-const MyPageHeader = ({ title }: HeaderProps) => {
-  const router = useRouter();
+const MyPageHeader = () => {
+  const userValue = useUserValue();
 
   return (
     <S.MyPageHeader className="container">
-      <S.PrevButton onClick={() => router.back()}>
-        <Prev />
-      </S.PrevButton>
-      <S.Title>{title}</S.Title>
+      <S.TitleSection>
+        <span>{userValue.info?.nickname}</span>님 안녕하세요!
+      </S.TitleSection>
+      <S.SettingSection>
+        <Link href="/mypage/settings" passHref>
+          <Setting />
+        </Link>
+      </S.SettingSection>
     </S.MyPageHeader>
   );
 };
