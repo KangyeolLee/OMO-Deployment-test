@@ -4,7 +4,11 @@ import useLocalStorage from '@hooks/useLocalStorage';
 
 import * as S from './styles';
 
-const SearchRecord = () => {
+type SearchRecordProps = {
+  searchStoresByText: (keyword: string) => void;
+};
+
+const SearchRecord = ({ searchStoresByText }: SearchRecordProps) => {
   const { items: recentsKeyword, removeStorageItem } = useLocalStorage('recents-keyword');
 
   const handleClickOnHashTag = (recent: string) => {
@@ -12,7 +16,9 @@ const SearchRecord = () => {
     removeStorageItem(recent);
   };
 
-  console.log(recentsKeyword);
+  const handleClickForSearching = (keyword: string) => {
+    searchStoresByText(keyword.replace('#', ''));
+  };
 
   return (
     <S.SearchRecord>
@@ -20,9 +26,9 @@ const SearchRecord = () => {
         <h1 className="sub-title">최근검색어</h1>
         <S.RecentRecords>
           {recentsKeyword.map((recent) => (
-            <HashTag key={recent}>
+            <HashTag key={recent} onClick={() => handleClickForSearching(recent)}>
               <span>{recent}</span>
-              <span className="close" onClick={() => handleClickOnHashTag(recent)}>
+              <span className="close" onClickCapture={() => handleClickOnHashTag(recent)}>
                 <CloseIcon />
               </span>
             </HashTag>
