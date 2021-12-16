@@ -1,23 +1,27 @@
-import { selectorFamily, useRecoilValueLoadable } from 'recoil';
+import { atomFamily, selectorFamily, useRecoilValueLoadable, useSetRecoilState } from 'recoil';
 
-import { requestRankers } from '@request';
+import { isTokenOnHeader, requestRankers } from '@request';
+import { IUserReturnType } from '@request/index';
 
 const DEFAULT_RANKING_LIMIT = 10;
 
-export interface IRankerState {
-  ranking: number;
-  nickname: string;
-  stampCount: number;
-  profileUrl: string | null;
-  power: number;
+export interface IRankerState extends IUserReturnType {
   email: string;
 }
+
+const triggerState = atomFamily({
+  key: 'triggerState',
+  default: Date.now(),
+});
 
 const rankerListQuery = selectorFamily({
   key: 'rankerValue',
   get:
     (rankingLimit: number = DEFAULT_RANKING_LIMIT) =>
-    async () => {
+    async ({ get }) => {
+      get(triggerState('userValue'));
+      if (!isTokenOnHeader) return;
+
       try {
         const response = await requestRankers(rankingLimit);
         return response.data;
@@ -30,3 +34,4 @@ const rankerListQuery = selectorFamily({
 
 export const useRankerListValue = (limit: number = DEFAULT_RANKING_LIMIT) =>
   useRecoilValueLoadable(rankerListQuery(limit));
+export const useRefetchRankerList = () => useSetRecoilState(triggerState('rankerValue'));

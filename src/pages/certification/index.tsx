@@ -12,6 +12,7 @@ import {
 } from '@components/Certification';
 import Header from '@components/Header';
 import Button from '@components/Shared/Button';
+import { PageLoading } from '@components/Shared/Loading';
 import { CertificationModal } from '@components/Shared/Modal';
 import { selectedReceipt } from '@recoil/certificationState';
 import { Omakase, currentOmakaseQuery, currentOmakaseState } from '@recoil/omakaseState';
@@ -46,7 +47,7 @@ const Certification = () => {
     return () => refresh();
   }, [refresh]);
 
-  if (state === 'loading') return '...loading';
+  if (state === 'loading') return <PageLoading />;
 
   const omakase = contents as Omakase;
 
@@ -66,7 +67,7 @@ const Certification = () => {
       <Header title="인증확인" backHandler={handleGoBack} />
       <CertificationMain className="container">
         <LocationChecker
-          image={omakase.image_url}
+          image={omakase.image_url || '/images/default-image-list.jpg'}
           address={omakase.address}
           name={omakase.name}
           handleClickOnReselectLocation={handleClickOnReselectLocation}
